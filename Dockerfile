@@ -4,7 +4,7 @@ MAINTAINER Sanu Satyadarshi "sanusatyadarshi@gmail.com"
 
 RUN apt-get -y update 
 
-RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN dpkg-divert --local --rename --COPY /sbin/initctl
 #RUN ln -s /bin/true /sbin/initctl
 
 RUN apt-get install -y locales dialog
@@ -20,33 +20,33 @@ RUN apt-get install -y supervisor apache2 php5 php5-gd php-xml-parser php5-intl 
 
 RUN wget -q -O - http://download.owncloud.org/community/owncloud-10.0.7.tar.bz2 | tar jx -C /var/www/;chown -R www-data:www-data /var/www/owncloud
 
-#Code changes made by sanusatyadarshi
-#add a script to change the maximum upload size
-#ADD resources/uploadsizemod.sh /tmp/
+# changes made by sanusatyadarshi
+#COPY a script to change the maximum upload size
+#COPY resources/uploadsizemod.sh /tmp/
 #RUN chmod +x /tmp/uploadsizemod.sh
 #RUN /tmp/uploadsizemod.sh
 #RUN rm /tmp/uploadsizemod.sh
 
-#code change by sanusatyadarshi to added modified files for maximum upload files
+#code change by sanusatyadarshi to COPYed modified files for maximum upload files
 RUN rm /var/www/owncloud/.user.ini
 RUN rm /var/www/owncloud/.htaccess
-ADD resources/.user.ini /var/www/owncloud
+COPY resources/.user.ini /var/www/owncloud
 RUN chmod +x /var/www/owncloud/.user.ini
-ADD resources/.htaccess /var/www/owncloud
+COPY resources/.htaccess /var/www/owncloud
 RUN chmod +x /var/www/owncloud/.htaccess
 
 RUN mkdir /etc/apache2/ssl
 
-ADD resources/cfgmysql.sh /tmp/
+COPY resources/cfgmysql.sh /tmp/
 RUN chmod +x /tmp/cfgmysql.sh
 RUN /tmp/cfgmysql.sh
 RUN rm /tmp/cfgmysql.sh
 
-ADD resources/001-owncloud.conf /etc/apache2/sites-available/
-ADD resources/000-default.conf /etc/apache2/sites-available/
-ADD resources/lamp.conf /etc/supervisor/conf.d/
+COPY resources/001-owncloud.conf /etc/apache2/sites-available/
+COPY resources/000-default.conf /etc/apache2/sites-available/
+COPY resources/lamp.conf /etc/supervisor/conf.d/
 
-ADD resources/start.sh /
+COPY resources/start.sh /
 
 RUN a2ensite 001-owncloud.conf
 RUN a2ensite 000-default.conf
