@@ -31,9 +31,9 @@ RUN wget -q -O - http://download.owncloud.org/community/owncloud-10.0.7.tar.bz2 
 RUN rm /var/www/owncloud/.user.ini
 RUN rm /var/www/owncloud/.htaccess
 ADD resources/.user.ini /var/www/owncloud
-chmod +x /var/www/owncloud/.user.ini
+RUN chmod +x /var/www/owncloud/.user.ini
 ADD resources/.htaccess /var/www/owncloud
-chmod +x /var/www/owncloud/.htaccess
+RUN chmod +x /var/www/owncloud/.htaccess
 
 RUN mkdir /etc/apache2/ssl
 
