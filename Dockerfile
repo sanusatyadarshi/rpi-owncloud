@@ -1,5 +1,5 @@
 FROM resin/rpi-raspbian:latest
-MAINTAINER Søren Schmidt Kriegbaum "comzone5@gmail.com"
+MAINTAINER Sanu Satyadarshi "sanusatyadarshi@gmail.com"
 #RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" >> /etc/apt/sources.list
 
 RUN apt-get -y update 
@@ -18,7 +18,22 @@ RUN echo "mysql-server-5.5 mysql-server/root_password_again seen true" | debconf
 
 RUN apt-get install -y supervisor apache2 php5 php5-gd php-xml-parser php5-intl php5-sqlite mysql-server-5.5 smbclient curl libcurl3 php5-mysql php5-curl bzip2 wget vim openssl ssl-cert sharutils
 
-RUN wget -q -O - http://download.owncloud.org/community/owncloud-latest.tar.bz2 | tar jx -C /var/www/;chown -R www-data:www-data /var/www/owncloud
+RUN wget -q -O - http://download.owncloud.org/community/owncloud-10.0.7.tar.bz2 | tar jx -C /var/www/;chown -R www-data:www-data /var/www/owncloud
+
+#Code changes made by sanusatyadarshi
+#add a script to change the maximum upload size
+#ADD resources/uploadsizemod.sh /tmp/
+#RUN chmod +x /tmp/uploadsizemod.sh
+#RUN /tmp/uploadsizemod.sh
+#RUN rm /tmp/uploadsizemod.sh
+
+#code change by sanusatyadarshi to added modified files for maximum upload files
+RUN rm /var/www/owncloud/.user.ini
+RUN rm /var/www/owncloud/.htaccess
+ADD resources/.user.ini /var/www/owncloud
+chmod +x /var/www/owncloud/.user.ini
+ADD resources/.htaccess /var/www/owncloud
+chmod +x /var/www/owncloud/.htaccess
 
 RUN mkdir /etc/apache2/ssl
 
